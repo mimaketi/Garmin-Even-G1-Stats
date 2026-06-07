@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//home/mcc4075/.Garmin/ConnectIQ/Sdks/**)",
+      "Read(//home/mcc4075/.Garmin/ConnectIQ/Devices/**)",
+      "Bash(grep -n 'typedef Views' __TRACKED_VAR__/bin/api.mir)",
+      "Bash(grep -n 'class DataField' __TRACKED_VAR__/bin/api.mir)",
+      "Bash(grep -n 'typedef Views\\\\|Views as\\\\|Views =' __TRACKED_VAR__/bin/api.mir)",
+      "Bash(grep -n SCAN_STATE_ __TRACKED_VAR__/bin/api.mir)",
+      "Bash(awk '/class ScanResult /,/^        }/' __TRACKED_VAR__/bin/api.mir)",
+      "Bash(grep -niE 'ScanFilter|setScanFilter|activeScan|scanResponse|setScanState' __TRACKED_VAR__/bin/api.mir)",
+      "Bash(grep -n 'getManufacturerSpecificDataIterator\\\\|class ManufacturerData\\\\|ManufacturerData\\\\b' __TRACKED_VAR__/bin/api.mir)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:codeberg.org)"
+    ]
+  }
+}
