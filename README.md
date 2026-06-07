@@ -1,4 +1,4 @@
-# G1Poc — Even Realities G1 Workout HUD for Garmin Smart Watches
+# G1Stats - Even Realities G1 Workout HUD for Garmin Smart Watches
 
 A Garmin Connect IQ data field that streams live workout metrics to
 [Even Realities G1](https://www.evenrealities.com/) smart glasses over BLE.
@@ -8,8 +8,11 @@ field of view during a run, walk, or hike.
 **License:** GPL-3.0, non-commercial use only. See `LICENSE`.
 
 // SPDX-AI-Disclosure: ai-generated
+
 // SPDX-AI-Model: claude-opus-4-7
+
 // SPDX-AI-Provider: Anthropic
+
 // SPDX-AI-Scope: Generated boilerplate; reviewed manually.
 
 ---
@@ -21,6 +24,15 @@ field of view during a run, walk, or hike.
 - Connect IQ SDK 8.4.0+ to build from source
 
 ---
+
+## Installing
+- Plug your smartwatch into your computer in file transfer mode.  
+- Once it connects, browse to it and open the "Garmin" then "Apps" folder.
+- Drop the appropriate .prg file from the releases page into it, Eject, then unplug.
+
+Your watch should see the new application, and ask you which activities
+to apply it too.  I suggest Running, Walking, Hiking activities. 
+
 
 ## First-Time Pairing
 
