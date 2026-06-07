@@ -1,4 +1,4 @@
-# G1Poc — Even Realities G1 Workout HUD for Garmin fenix 7
+# G1Poc — Even Realities G1 Workout HUD for Garmin Smart Watches
 
 A Garmin Connect IQ data field that streams live workout metrics to
 [Even Realities G1](https://www.evenrealities.com/) smart glasses over BLE.
@@ -16,7 +16,7 @@ field of view during a run, walk, or hike.
 
 ## Requirements
 
-- Garmin fenix 7 (tested device; other fenix/Forerunner may work)
+- **Garmin fenix 7** (tested device; other devices may work)
 - Even Realities G1 glasses (G1 only — G2 uses a different protocol)
 - Connect IQ SDK 8.4.0+ to build from source
 
