@@ -7,3 +7,4 @@ developer_key.der
 *.key
 *.p12
 *.pfx
+.claude/
