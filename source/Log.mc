@@ -5,7 +5,7 @@ using Toybox.System;
 
 module Log {
 
-    const DEBUG = true;
+    const DEBUG = false;
     const MAX_LINES = 9;
     var lines as Lang.Array<Lang.String> = [];
 

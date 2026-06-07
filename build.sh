@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build the G1 PoC for fenix 7.
+# Build the G1 PoC for all devices listed in manifest.xml.
 # Needs: Connect IQ SDK on PATH, device files downloaded via SDK Manager
 # (login once), and a developer key (developer_key.der).
 #   monkeyc not found? export PATH="$HOME/.Garmin/ConnectIQ/Sdks/<sdk>/bin:$PATH"
