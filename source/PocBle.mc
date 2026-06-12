@@ -38,6 +38,10 @@ class PocBle extends Ble.BleDelegate {
     const CMD_BATT      = 0x2C;
     const BATT_POLL_EVERY = 300;
     const TIME_SYNC_EVERY =  60;
+    // Stop scanning after this many compute ticks (~seconds) with no arm
+    // connected, so an absent pair of glasses doesn't drain the watch battery
+    // by scanning for the whole workout. Reset on disconnect / next workout.
+    const SCAN_TIMEOUT_SECS = 180;
 
     const SLOT_BY_PHYSICAL   = true;
     const INVERT_SIDES       = true;
@@ -102,6 +106,8 @@ class PocBle extends Ble.BleDelegate {
     hidden var mRightScan as Ble.ScanResult or Null = null;
     hidden var mScanning as Lang.Boolean = false;
     hidden var mDevCount as Lang.Number = 0;
+    hidden var mScanTick   as Lang.Number = 0;
+    hidden var mScanGaveUp as Lang.Boolean = false;
 
     hidden var mQueue as Lang.Array = [];
     hidden var mInFlight as Lang.Boolean = false;
@@ -182,6 +188,7 @@ class PocBle extends Ble.BleDelegate {
     }
 
     hidden function startScan() as Void {
+        if (mScanGaveUp) { return; }
         mLockedChannel = null;
         mLeftScan = null;
         mRightScan = null;
@@ -351,6 +358,18 @@ class PocBle extends Ble.BleDelegate {
         pump();
     }
 
+    // Give up scanning after SCAN_TIMEOUT_SECS with no glasses found. Turns the
+    // radio off and parks the field idle for the rest of the workout (a fresh
+    // PocBle is created next workout, so this clears on its own).
+    hidden function giveUpScan() as Void {
+        mScanGaveUp = true;
+        mScanning = false;
+        mPairBusy = false;
+        try { Ble.setScanState(Ble.SCAN_STATE_OFF); } catch (ex) {}
+        mStatus = "no glasses";
+        Log.add("scan timeout -> stop");
+    }
+
     hidden function ensureMoreArms() as Void {
         if (mLeftRx != null && mRightRx != null) {
             mScanning = false;
@@ -416,6 +435,13 @@ class PocBle extends Ble.BleDelegate {
         if (mInFlight) {
             mInFlightAge += 1;
             if (mInFlightAge >= 3) { mInFlight = false; }
+        }
+        if (!mLeftReady && !mRightReady && !mScanGaveUp) {
+            mScanTick += 1;
+            if (mScanTick >= SCAN_TIMEOUT_SECS) {
+                giveUpScan();
+                return;
+            }
         }
         if (mLeftReady || mRightReady) {
             mTick += 1;
@@ -951,6 +977,7 @@ class PocBle extends Ble.BleDelegate {
         mLeftBypassed = false; mRightBypassed = false;
         mInFlightChar = null; mInFlightBytes = null;
         mPairBusy = false; mInitDone = false;
+        mScanTick = 0; mScanGaveUp = false;
         mLockedChannel = null; mLeftScan = null; mRightScan = null;
         mPairingSide = 0;
         mMode = MODE_UNKNOWN; mGlanceShownTick = -1; mGlanceLockoutTick = -1;
