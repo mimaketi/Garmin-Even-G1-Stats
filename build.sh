@@ -7,8 +7,35 @@
 #     openssl pkcs8 -topk8 -inform PEM -outform DER -in developer_key.pem \
 #       -out developer_key.der -nocrypt
 set -euo pipefail
+
 KEY="${1:-developer_key.der}"
+MANIFEST="${2:-manifest.xml}"
+FAILED=()
+
 mkdir -p bin
-monkeyc -f monkey.jungle -d fenix7 -o bin/G1Poc.prg -y "$KEY" -w -l 2
-echo "Built bin/G1Poc.prg"
-echo "Simulator:  connectiq &   then   monkeydo bin/G1Poc.prg fenix7"
+
+# Parse device IDs directly from the manifest
+DEVICES=$(grep -oP '(?<=<iq:product id=")[^"]+' "$MANIFEST")
+
+for DEVICE in $DEVICES; do
+    OUT="bin/G1Poc-${DEVICE}.prg"
+    echo "Building $DEVICE..."
+    if monkeyc -f monkey.jungle -d "$DEVICE" -o "$OUT" -y "$KEY" -w -l 2; then
+        echo "  OK -> $OUT"
+    else
+        echo "  FAILED: $DEVICE"
+        FAILED+=("$DEVICE")
+    fi
+done
+
+echo ""
+echo "Build complete. $(( $(echo "$DEVICES" | wc -w) - ${#FAILED[@]} )) succeeded, ${#FAILED[@]} failed."
+
+if [ ${#FAILED[@]} -gt 0 ]; then
+    echo "Failed devices:"
+    printf '  %s\n' "${FAILED[@]}"
+    exit 1
+fi
+
+echo ""
+echo "Simulator:  connectiq &   then   monkeydo bin/G1Poc-<device>.prg <device>"
